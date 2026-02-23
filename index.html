@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ahmad Baihaqie — Software Engineer UI/UX</title>
+<script>try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<link rel="icon" type="image/png" href="ABdevicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@200;300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,35 +27,69 @@
   --purple: #a78bfa;
   --purple-dim: rgba(167,139,250,0.12);
   --rose: #fb7185;
+  --rose-dim: rgba(251,113,133,0.12);
   --border: rgba(255,255,255,0.06);
   --border-hover: rgba(255,255,255,0.12);
+  --bg-bar: rgba(12,14,18,0.85);
+  --bg-nav: rgba(12,14,18,0.6);
+  --bg-menu: rgba(10,12,16,1);
+  --surface-hover: rgba(255,255,255,0.04);
+  --surface-active: rgba(255,255,255,0.08);
   --serif: 'Instrument Serif', Georgia, serif;
   --sans: 'Outfit', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', monospace;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+html[data-theme="light"] {
+  --bg: #f4f6f9;
+  --bg-elevated: #edf0f5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f0f4f8;
+  --text: #111318;
+  --text-muted: #5a6478;
+  --text-dim: #9da5b3;
+  --cyan: #0891b2;
+  --cyan-dim: rgba(8,145,178,0.1);
+  --green: #059669;
+  --green-dim: rgba(5,150,105,0.1);
+  --amber: #d97706;
+  --amber-dim: rgba(217,119,6,0.1);
+  --purple: #7c3aed;
+  --purple-dim: rgba(124,58,237,0.1);
+  --rose: #e11d48;
+  --rose-dim: rgba(225,29,72,0.1);
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.14);
+  --bg-bar: rgba(244,246,249,0.92);
+  --bg-nav: rgba(244,246,249,0.88);
+  --bg-menu: #f4f6f9;
+  --surface-hover: rgba(0,0,0,0.05);
+  --surface-active: rgba(0,0,0,0.09);
+}
+
 html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--cyan) var(--bg); }
-body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; -webkit-font-smoothing: antialiased; transition: background-color 0.3s, color 0.3s; }
 
 body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px; }
 
-.status-bar { position: fixed; top: 0; left: 0; right: 0; height: 36px; background: rgba(12,14,18,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; z-index: 200; font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); }
+.status-bar { position: fixed; top: 0; left: 0; right: 0; height: 36px; background: var(--bg-bar); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; z-index: 200; font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); }
 .status-left { display: flex; align-items: center; gap: 1rem; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 3s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 .status-available { color: var(--green); letter-spacing: 0.05em; }
 .status-right { display: flex; align-items: center; gap: 1.5rem; }
 .status-kbd { display: flex; align-items: center; gap: 0.3rem; opacity: 0.6; }
-.status-kbd kbd { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 3px; padding: 1px 5px; font-family: var(--mono); font-size: 0.6rem; }
+.status-kbd kbd { background: var(--surface-hover); border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; font-family: var(--mono); font-size: 0.6rem; }
 
-.nav { position: fixed; top: 36px; left: 0; right: 0; z-index: 150; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(12,14,18,0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
-.nav-logo { font-family: var(--mono); font-size: 0.85rem; font-weight: 500; color: var(--cyan); text-decoration: none; }
+.nav { position: fixed; top: 36px; left: 0; right: 0; z-index: 150; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; background: var(--bg-nav); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: var(--mono); font-size: 0.85rem; font-weight: 500; color: var(--cyan); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+.nav-logo img { width: 30px; height: 30px; border-radius: 5px; object-fit: cover; }
 .nav-logo .slash { color: var(--text-dim); }
 .nav-logo .name { color: var(--text); }
 .nav-links { display: flex; gap: 0.25rem; list-style: none; }
 .nav-links a { color: var(--text-muted); text-decoration: none; font-family: var(--mono); font-size: 0.72rem; padding: 0.4rem 0.8rem; border-radius: 6px; transition: color 0.2s, background 0.2s; position: relative; }
-.nav-links a:hover, .nav-links a.active { color: var(--text); background: rgba(255,255,255,0.04); }
+.nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--surface-hover); }
 .nav-links a.active::before { content: ''; position: absolute; bottom: 0; left: 25%; right: 25%; height: 1.5px; background: var(--cyan); border-radius: 1px; }
 
 .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; -webkit-tap-highlight-color: transparent; }
@@ -61,6 +97,14 @@ body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-ev
 .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .nav-hamburger.open span:nth-child(2) { opacity: 0; }
 .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.nav-theme-li { display: flex; align-items: center; margin-left: 0.25rem; }
+.theme-toggle { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted); cursor: pointer; padding: 5px 7px; display: flex; align-items: center; gap: 0; transition: color 0.2s, border-color 0.2s, background 0.2s; flex-shrink: 0; }
+.theme-toggle:hover { color: var(--text); border-color: var(--border-hover); background: var(--surface-hover); }
+.theme-toggle .icon-moon { display: none; }
+.theme-label-dark, .theme-label-light { display: none; }
+html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
 .cmd-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 999; display: flex; align-items: flex-start; justify-content: center; padding-top: 20vh; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
 .cmd-overlay.open { opacity: 1; pointer-events: all; }
@@ -72,7 +116,7 @@ body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-ev
 .cmd-input::placeholder { color: var(--text-dim); }
 .cmd-results { max-height: 300px; overflow-y: auto; padding: 0.5rem; }
 .cmd-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.75rem; border-radius: 8px; cursor: pointer; transition: background 0.15s; font-size: 0.85rem; color: var(--text-muted); }
-.cmd-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.cmd-item:hover { background: var(--surface-hover); color: var(--text); }
 .cmd-item-icon { width: 18px; text-align: center; font-size: 0.8rem; }
 .cmd-item-label { flex: 1; }
 .cmd-item-hint { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); }
@@ -105,8 +149,8 @@ body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-ev
 .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; border-radius: 8px; font-family: var(--mono); font-size: 0.78rem; font-weight: 500; text-decoration: none; transition: all 0.3s var(--ease); cursor: pointer; border: none; }
 .btn-primary { background: linear-gradient(135deg, var(--cyan), #06b6d4); color: var(--bg); box-shadow: 0 4px 20px rgba(34,211,238,0.25); }
 .btn-primary:hover { box-shadow: 0 8px 30px rgba(34,211,238,0.4); transform: translateY(-2px); }
-.btn-ghost { background: rgba(255,255,255,0.04); color: var(--text); border: 1px solid var(--border-hover); }
-.btn-ghost:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+.btn-ghost { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border-hover); }
+.btn-ghost:hover { background: var(--surface-active); border-color: var(--border-hover); transform: translateY(-2px); }
 
 .hero-code-block { position: absolute; top: 15%; right: 6%; font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); background: rgba(18,21,26,0.7); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem 1.5rem; line-height: 1.8; opacity: 0; animation: fadeIn 1s 1.4s var(--ease) forwards; max-width: 280px; }
 .hero-code-block .kw { color: var(--purple); }
@@ -166,7 +210,7 @@ section { position: relative; }
 .skill-card:nth-child(2) .skill-icon-wrap { background: var(--green-dim); color: var(--green); }
 .skill-card:nth-child(3) .skill-icon-wrap { background: var(--purple-dim); color: var(--purple); }
 .skill-card:nth-child(4) .skill-icon-wrap { background: var(--amber-dim); color: var(--amber); }
-.skill-card:nth-child(5) .skill-icon-wrap { background: rgba(251,113,133,0.12); color: var(--rose); }
+.skill-card:nth-child(5) .skill-icon-wrap { background: var(--rose-dim); color: var(--rose); }
 .skill-card:nth-child(6) .skill-icon-wrap { background: var(--cyan-dim); color: var(--cyan); }
 .skill-card:nth-child(7) .skill-icon-wrap { background: var(--green-dim); color: var(--green); }
 .skill-card:nth-child(8) .skill-icon-wrap { background: var(--purple-dim); color: var(--purple); }
@@ -188,7 +232,7 @@ section { position: relative; }
 .project-title { font-family: var(--serif); font-size: 1.6rem; font-weight: 400; margin-bottom: 0.6rem; }
 .project-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; font-weight: 300; margin-bottom: 1.2rem; max-width: 600px; }
 .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.project-tag { font-family: var(--mono); font-size: 0.62rem; padding: 0.3rem 0.65rem; border-radius: 5px; background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--border); transition: color 0.2s, border-color 0.2s; }
+.project-tag { font-family: var(--mono); font-size: 0.62rem; padding: 0.3rem 0.65rem; border-radius: 5px; background: var(--surface-hover); color: var(--text-muted); border: 1px solid var(--border); transition: color 0.2s, border-color 0.2s; }
 .project-tag:hover { color: var(--cyan); border-color: rgba(34,211,238,0.3); }
 
 .experience { padding: 8rem 8vw; background: var(--bg-elevated); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -247,11 +291,17 @@ footer { padding: 1.5rem 8vw; border-top: 1px solid var(--border); display: flex
 @media (max-width: 640px) {
   .status-bar { padding: 0 1rem; }
   .status-kbd { display: none; }
-  .nav { padding: 0.8rem 1.25rem; backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(10,12,16,0.95); }
+  .nav { padding: 0.8rem 1.25rem; backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--bg-bar); }
   .nav-hamburger { display: flex; position: relative; z-index: 200; }
-  .nav-links { position: fixed; inset: 0; background: rgba(10,12,16,1); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); flex-direction: column; align-items: center; justify-content: center; gap: 1.75rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 199; }
+  .nav-links { position: fixed; inset: 0; background: var(--bg-menu); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); flex-direction: column; align-items: center; justify-content: center; gap: 1.75rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 199; }
   .nav-links.open { opacity: 1; pointer-events: all; }
   .nav-links a { font-size: 1.2rem; padding: 0.75rem 1.5rem; }
+  .nav-theme-li { margin-left: 0; }
+  .nav-links .theme-toggle { border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 1.5rem; gap: 0.75rem; color: var(--text-muted); font-family: var(--mono); font-size: 1.2rem; }
+  .nav-links .theme-toggle svg { width: 20px; height: 20px; }
+  .theme-label-dark { display: inline; }
+  html[data-theme="light"] .theme-label-dark { display: none; }
+  html[data-theme="light"] .theme-label-light { display: inline; }
   .hero { padding: 0 6vw; padding-top: 90px; }
   .about, .projects, .experience, .education, .contact { padding: 4rem 6vw; }
   .skills, .reference { padding: 4rem 6vw; }
@@ -284,7 +334,7 @@ footer { padding: 1.5rem 8vw; border-top: 1px solid var(--border); display: flex
 </div>
 
 <nav class="nav">
-  <a href="#" class="nav-logo"><span class="slash">~/</span><span class="name">baihaqie</span></a>
+  <a href="#" class="nav-logo"><img src="ABdevicon.png" alt="AB"><span class="slash">~/</span><span class="name">baihaqie</span></a>
   <button class="nav-hamburger" id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
   <ul class="nav-links" id="navLinks">
     <li><a href="#about">about</a></li>
@@ -293,6 +343,14 @@ footer { padding: 1.5rem 8vw; border-top: 1px solid var(--border); display: flex
     <li><a href="#experience">experience</a></li>
     <li><a href="#education">education</a></li>
     <li><a href="#contact">contact</a></li>
+    <li class="nav-theme-li">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span class="theme-label-dark">light mode</span>
+        <span class="theme-label-light">dark mode</span>
+      </button>
+    </li>
   </ul>
 </nav>
 
@@ -441,6 +499,9 @@ document.querySelectorAll('.nav-links a,.btn[href^="#"],.hero-actions a[href^="#
 const navToggle=document.getElementById('navToggle'),navLinks=document.getElementById('navLinks');
 navToggle.addEventListener('click',()=>{const o=navLinks.classList.toggle('open');navToggle.classList.toggle('open',o);document.body.style.overflow=o?'hidden':''});
 navLinks.querySelectorAll('a').forEach(l=>l.addEventListener('click',()=>{navLinks.classList.remove('open');navToggle.classList.remove('open');document.body.style.overflow=''}));
+
+const themeToggle=document.getElementById('themeToggle');
+themeToggle.addEventListener('click',()=>{const isLight=document.documentElement.getAttribute('data-theme')==='light';document.documentElement.setAttribute('data-theme',isLight?'dark':'light');try{localStorage.setItem('theme',isLight?'dark':'light')}catch(e){}});
 </script>
 </body>
 </html>
