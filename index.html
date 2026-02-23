@@ -1361,17 +1361,140 @@ footer {
 @media (max-width: 640px) {
   .nav { padding: 1rem 1.5rem; }
   .nav-links { display: none; }
-  .hero { padding: 0 5vw; }
-  .about, .work, .experience, .education, .testimonials, .contact { padding: 5rem 5vw; }
-  .skills { padding: 5rem 5vw; }
+  .hero { padding: 0 6vw; }
+  .about, .work, .experience, .education, .testimonials, .contact { padding: 5rem 6vw; }
+  .skills { padding: 5rem 6vw; }
   .skills-grid { grid-template-columns: 1fr; }
   .about-stats { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-  .work-header { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+  .about-image-wrapper { max-height: 420px; }
+  .work-header { flex-direction: column; gap: 1.5rem; align-items: center; }
   .project-icon-card { width: 150px; height: 150px; }
   .project-icon-svg { width: 56px; height: 56px; }
   .project-icon-wrap { aspect-ratio: auto; padding: 2rem 0; }
   footer { flex-direction: column; gap: 0.5rem; text-align: center; }
   .shape-cube, .shape-ring, .shape-pyramid, .shape-diamond { display: none; }
+}
+
+/* ========== HAMBURGER BUTTON ========== */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--text);
+  transition: transform 0.35s var(--ease-out-expo), opacity 0.25s;
+  transform-origin: center;
+}
+
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+/* ========== TOUCH DEVICE OPTIMIZATIONS ========== */
+@media (hover: none) {
+  .cursor-glow { display: none; }
+}
+
+/* ========== ADDITIONAL MOBILE STYLES ========== */
+@media (max-width: 640px) {
+  body { perspective: none; }
+
+  .nav { mix-blend-mode: normal; }
+
+  .nav-hamburger { display: flex; }
+
+  .nav-links {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease-out-expo);
+    z-index: 199;
+  }
+
+  .nav-links.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .nav-links a {
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    padding: 0.5rem 1rem;
+  }
+
+  .hero-bg-text {
+    transform: translate(-50%, -50%);
+    font-size: clamp(4rem, 28vw, 8rem);
+  }
+
+  /* Native horizontal scroll on mobile */
+  .horizontal-track {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding: 0 5vw 2rem;
+    transform: none !important;
+  }
+
+  .horizontal-card {
+    scroll-snap-align: start;
+    min-width: 78vw;
+  }
+
+  /* Touch-friendly tap targets */
+  .project-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .contact-socials a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+  }
+
+  /* Fix: contact-glow is 700px wide and causes horizontal overflow on mobile */
+  .contact { overflow: hidden; }
+
+  /* Fix: allow the horizontal track's native scroll to work */
+  .horizontal-scroll-wrapper { overflow: visible; }
+
+  /* Center hero content on mobile */
+  .hero { align-items: center; text-align: center; }
+  .hero-label { text-align: center; }
+  .hero-title { text-align: center; max-width: 100%; }
+  .hero-subtitle { text-align: center; max-width: 100%; margin-left: auto; margin-right: auto; }
+
+  /* Center about section content on mobile */
+  .about-content { text-align: center; }
+  .about-stats { justify-items: center; }
+
+  /* Center section headings on mobile */
+  .section-label, .section-heading { text-align: center; }
+  .work-header { align-items: center; }
+  .work-header p { text-align: center; max-width: 100%; }
 }
 </style>
 </head>
@@ -1386,7 +1509,12 @@ footer {
 <!-- NAV -->
 <nav class="nav">
   <a href="#" class="nav-logo">AB.</a>
-  <ul class="nav-links">
+  <button class="nav-hamburger" id="navToggle" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
     <li><a href="#about">About</a></li>
     <li><a href="#work">Work</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -1739,6 +1867,10 @@ footer {
 </footer>
 
 <script>
+// ========== DEVICE DETECTION ==========
+const isTouchDevice = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const isMobile = window.innerWidth <= 640;
+
 // ========== SCROLL PROGRESS ==========
 const scrollProgress = document.getElementById('scrollProgress');
 function updateScrollProgress() {
@@ -1763,11 +1895,12 @@ function animateCursor() {
   cursorGlow.style.transform = `translate(${glowX - 250}px, ${glowY - 250}px)`;
   requestAnimationFrame(animateCursor);
 }
-animateCursor();
+if (!isTouchDevice) animateCursor();
 
 // ========== 3D FLOATING PARTICLES ==========
 const particlesContainer = document.getElementById('particles');
-for (let i = 0; i < 20; i++) {
+const particleCount = isMobile ? 6 : 20;
+for (let i = 0; i < particleCount; i++) {
   const p = document.createElement('div');
   p.className = 'particle';
   p.style.setProperty('--x', `${Math.random() * 100}vw`);
@@ -1781,29 +1914,31 @@ for (let i = 0; i < 20; i++) {
 }
 
 // ========== 3D TILT EFFECT ON SKILL CARDS ==========
-document.querySelectorAll('[data-tilt]').forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateY = ((x - centerX) / centerX) * 8;
-    const rotateX = ((centerY - y) / centerY) * 8;
+if (!isTouchDevice) {
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateY = ((x - centerX) / centerX) * 8;
+      const rotateX = ((centerY - y) / centerY) * 8;
 
-    card.style.setProperty('--rotateX', `${rotateX}deg`);
-    card.style.setProperty('--rotateY', `${rotateY}deg`);
-    card.style.setProperty('--mouseX', `${(x / rect.width) * 100}%`);
-    card.style.setProperty('--mouseY', `${(y / rect.height) * 100}%`);
-  });
+      card.style.setProperty('--rotateX', `${rotateX}deg`);
+      card.style.setProperty('--rotateY', `${rotateY}deg`);
+      card.style.setProperty('--mouseX', `${(x / rect.width) * 100}%`);
+      card.style.setProperty('--mouseY', `${(y / rect.height) * 100}%`);
+    });
 
-  card.addEventListener('mouseleave', () => {
-    card.style.setProperty('--rotateX', '0deg');
-    card.style.setProperty('--rotateY', '0deg');
-    card.style.transition = 'transform 0.5s var(--ease-out-expo)';
-    setTimeout(() => card.style.transition = '', 500);
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--rotateX', '0deg');
+      card.style.setProperty('--rotateY', '0deg');
+      card.style.transition = 'transform 0.5s var(--ease-out-expo)';
+      setTimeout(() => card.style.transition = '', 500);
+    });
   });
-});
+}
 
 // ========== INTERSECTION OBSERVER — REVEAL ==========
 const observerOptions = {
@@ -1852,6 +1987,7 @@ document.querySelectorAll('.count-up').forEach(el => countObserver.observe(el));
 const parallaxElements = document.querySelectorAll('[data-parallax-speed]');
 
 function updateParallax() {
+  if (isMobile) return;
   const scrollY = window.scrollY;
   parallaxElements.forEach(el => {
     const speed = parseFloat(el.dataset.parallaxSpeed);
@@ -1869,7 +2005,7 @@ const horizontalTrack = document.getElementById('horizontalTrack');
 const horizontalWrapper = document.querySelector('.horizontal-scroll-wrapper');
 
 function updateHorizontalScroll() {
-  if (!horizontalWrapper) return;
+  if (!horizontalWrapper || isMobile) return;
   const rect = horizontalWrapper.getBoundingClientRect();
   const sectionTop = rect.top;
   const sectionHeight = rect.height;
@@ -1908,54 +2044,80 @@ window.addEventListener('scroll', () => {
 const heroTitle = document.querySelector('.hero-title');
 const heroSubtitle = document.querySelector('.hero-subtitle');
 
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  const opacity = Math.max(0, 1 - scrollY / 600);
-  const translateY = scrollY * 0.3;
+if (!isMobile) {
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const opacity = Math.max(0, 1 - scrollY / 600);
+    const translateY = scrollY * 0.3;
 
-  if (heroTitle) {
-    heroTitle.style.transform = `translateY(${translateY}px)`;
-    heroTitle.style.opacity = opacity;
-  }
-  if (heroSubtitle) {
-    heroSubtitle.style.opacity = opacity;
-  }
-});
+    if (heroTitle) {
+      heroTitle.style.transform = `translateY(${translateY}px)`;
+      heroTitle.style.opacity = opacity;
+    }
+    if (heroSubtitle) {
+      heroSubtitle.style.opacity = opacity;
+    }
+  });
+}
 
 // ========== 3D TILT ON PROJECT ICON CARDS ==========
-document.querySelectorAll('.project-icon-card').forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateY = ((x - centerX) / centerX) * -10;
-    const rotateX = ((centerY - y) / centerY) * 10;
-    card.style.transform = `perspective(600px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(20px) scale(1.05)`;
+if (!isTouchDevice) {
+  document.querySelectorAll('.project-icon-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateY = ((x - centerX) / centerX) * -10;
+      const rotateX = ((centerY - y) / centerY) * 10;
+      card.style.transform = `perspective(600px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(20px) scale(1.05)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+      card.style.transition = 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.7s, border-color 0.4s';
+      setTimeout(() => card.style.transition = '', 700);
+    });
   });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-    card.style.transition = 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.7s, border-color 0.4s';
-    setTimeout(() => card.style.transition = '', 700);
-  });
-});
+}
 
 // ========== MAGNETIC HOVER ON PROJECT LINKS ==========
-document.querySelectorAll('.project-link').forEach(link => {
-  link.addEventListener('mousemove', (e) => {
-    const rect = link.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    link.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+if (!isTouchDevice) {
+  document.querySelectorAll('.project-link').forEach(link => {
+    link.addEventListener('mousemove', (e) => {
+      const rect = link.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      link.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+    });
+
+    link.addEventListener('mouseleave', () => {
+      link.style.transform = 'translate(0, 0)';
+      link.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+      setTimeout(() => link.style.transition = '', 400);
+    });
+  });
+}
+
+// ========== HAMBURGER MENU ==========
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+
+if (navToggle && navLinks) {
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    navToggle.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
-  link.addEventListener('mouseleave', () => {
-    link.style.transform = 'translate(0, 0)';
-    link.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-    setTimeout(() => link.style.transition = '', 400);
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      navToggle.classList.remove('open');
+      document.body.style.overflow = '';
+    });
   });
-});
+}
 </script>
 </body>
 </html>
