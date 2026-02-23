@@ -247,9 +247,9 @@ footer { padding: 1.5rem 8vw; border-top: 1px solid var(--border); display: flex
 @media (max-width: 640px) {
   .status-bar { padding: 0 1rem; }
   .status-kbd { display: none; }
-  .nav { padding: 0.8rem 1.25rem; }
-  .nav-hamburger { display: flex; }
-  .nav-links { position: fixed; inset: 0; background: rgba(12,14,18,0.97); backdrop-filter: blur(20px); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 199; }
+  .nav { padding: 0.8rem 1.25rem; backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(10,12,16,0.95); }
+  .nav-hamburger { display: flex; position: relative; z-index: 200; }
+  .nav-links { position: fixed; inset: 0; background: rgba(10,12,16,1); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); flex-direction: column; align-items: center; justify-content: center; gap: 1.75rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 199; }
   .nav-links.open { opacity: 1; pointer-events: all; }
   .nav-links a { font-size: 1.2rem; padding: 0.75rem 1.5rem; }
   .hero { padding: 0 6vw; padding-top: 90px; }
@@ -290,7 +290,8 @@ footer { padding: 1.5rem 8vw; border-top: 1px solid var(--border); display: flex
     <li><a href="#about">about</a></li>
     <li><a href="#skills-section">skills</a></li>
     <li><a href="#projects">work</a></li>
-    <li><a href="#experience">exp</a></li>
+    <li><a href="#experience">experience</a></li>
+    <li><a href="#education">education</a></li>
     <li><a href="#contact">contact</a></li>
   </ul>
 </nav>
